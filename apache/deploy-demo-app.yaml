@@ -1,8 +1,14 @@
-# deployment.yaml
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: apache
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: apache-deployment
+  namespace: apache
   labels:
     app: apache
 spec:
@@ -20,4 +26,16 @@ spec:
         image: httpd:latest
         ports:
         - containerPort: 80
-        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apache-service
+  namespace: apache
+spec:
+  selector:
+    app: apache
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
